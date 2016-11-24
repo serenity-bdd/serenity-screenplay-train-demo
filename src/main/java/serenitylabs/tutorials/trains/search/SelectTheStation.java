@@ -5,9 +5,11 @@ import net.serenitybdd.screenplay.Interaction;
 import net.serenitybdd.screenplay.actions.Click;
 import net.serenitybdd.screenplay.actions.Enter;
 import net.serenitybdd.screenplay.targets.Target;
+import net.serenitybdd.screenplay.waits.WaitUntil;
 import net.thucydides.core.annotations.Step;
 
 import static net.serenitybdd.screenplay.Tasks.instrumented;
+import static net.serenitybdd.screenplay.matchers.WebElementStateMatchers.isVisible;
 
 class SelectTheStation implements Interaction {
     private final String stationName;
@@ -18,6 +20,7 @@ class SelectTheStation implements Interaction {
     public <T extends Actor> void performAs(T actor) {
         actor.attemptsTo(
                 Enter.theValue(stationName).into(stationDropdown),
+                WaitUntil.the(JourneyDetails.DROPDOWN_ENTRY.of(stationName), isVisible()),
                 Click.on(JourneyDetails.DROPDOWN_ENTRY.of(stationName))
         );
     }

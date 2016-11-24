@@ -17,6 +17,9 @@ class JourneyDetails {
     static final Target LEAVING_DATE = Target.the("leaving date")
             .locatedBy("(//*[contains(@class,'date-time__display-primary')])[1]");
 
+    static final Target SEASON_TICKET_TYPE = Target.the("{0} season ticket trip")
+            .locatedBy("//label[.='{0}']");
+
     static final Target RETURN_TRIP = Target.the("return trip")
             .locatedBy("//label[.='Return']");
 

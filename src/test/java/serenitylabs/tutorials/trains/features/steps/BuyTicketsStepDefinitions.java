@@ -11,12 +11,17 @@ import serenitylabs.tutorials.trains.journeys.TheAvailableJourneys;
 import serenitylabs.tutorials.trains.navigation.Navigate;
 import serenitylabs.tutorials.trains.search.DepartureDay;
 import serenitylabs.tutorials.trains.search.FindTickets;
+import serenitylabs.tutorials.trains.search.SeasonTicketDuration;
+
+import java.util.List;
 
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 import static org.hamcrest.Matchers.*;
+import static serenitylabs.tutorials.trains.navigation.Section.BuySeasonTickets;
 import static serenitylabs.tutorials.trains.navigation.Section.BuyTickets;
+import static serenitylabs.tutorials.trains.seasontickets.SeasonTicketOptions.seeEachSeasonTicketOptionIn;
 
 public class BuyTicketsStepDefinitions {
 
@@ -29,6 +34,13 @@ public class BuyTicketsStepDefinitions {
     public void decided_to_travel_by_train(String personaName) throws Throwable {
         theActorCalled(personaName).attemptsTo(
                 Navigate.to(BuyTickets)
+        );
+    }
+
+    @Given("^that (.*) has decided to check season tickets$")
+    public void decided_to_buy_a_season_ticket(String personaName) throws Throwable {
+        theActorCalled(personaName).attemptsTo(
+                Navigate.to(BuySeasonTickets)
         );
     }
 
@@ -47,7 +59,6 @@ public class BuyTicketsStepDefinitions {
     }
 
     @When("^s?he looks at a return trip from (.*) to (.*) leaving (.*) and returning in (.*) days$")
-
     public void looks_at_a_return_trip(String origin,
                                        String destination,
                                        DepartureDay departureDay,
@@ -60,6 +71,19 @@ public class BuyTicketsStepDefinitions {
                         .to(destination)
                         .leaving(departureDay)
                         .andReturningAfter(returningAfterDayCount)
+        );
+    }
+
+    @When("^s?he looks at a (.*) season ticket from (.*) to (.*)")
+    public void looks_at_a_season_ticket(SeasonTicketDuration seasonTicketDuration,
+                                         String origin,
+                                         String destination) throws Throwable {
+        theActorInTheSpotlight().attemptsTo(
+                FindTickets
+                        .forASeasonTicket()
+                        .ofDuration(seasonTicketDuration)
+                        .from(origin)
+                        .to(destination)
         );
     }
 
@@ -79,4 +103,10 @@ public class BuyTicketsStepDefinitions {
         return not(isEmptyString());
     }
 
+    @Then("^s?he should see the following season ticket options:$")
+    public void shouldSeeTheFollowingSeasonTicketOptions(List<String> seasonTicketOptions) throws Throwable {
+        theActorInTheSpotlight().should(
+                seeEachSeasonTicketOptionIn(seasonTicketOptions)
+        );
+    }
 }
